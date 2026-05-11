@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Admin Dashboard</title>
+
+   <link rel="stylesheet"
+      href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+
+<body>
+
+    <!-- Background Glow -->
+    <div class="glow"></div>
+
+    <div class="container">
+
+        <h1>
+            14 TN Battalion NCC <br>
+            Admin Dashboard
+        </h1>
+
+        <table>
+
+            <tr>
+
+                <th>ID</th>
+
+                <th>FULL NAME</th>
+
+                <th>DOB</th>
+
+                <th>NCC YEAR</th>
+
+                <th>CAMP NAME</th>
+
+                <th>COLLEGE</th>
+
+                <th>REGIMENT NO</th>
+
+                <th>EMAIL</th>
+
+                <th>PHONE</th>
+
+                <th>ACTION</th>
+
+            </tr>
+
+            {% for student in data %}
+
+            <tr>
+
+                <!-- ID -->
+                <td>{{ student[0] }}</td>
+
+                <!-- FULL NAME -->
+                <td>{{ student[1] }}</td>
+
+                <!-- DATE OF BIRTH -->
+                <td>{{ student[2] }}</td>
+
+                <!-- NCC YEAR -->
+                <td>{{ student[3] }}</td>
+
+                <!-- CAMP NAME -->
+                <td>{{ student[4] }}</td>
+
+                <!-- COLLEGE -->
+                <td>{{ student[5] }}</td>
+
+                <!-- REGIMENT NUMBER -->
+                <td>{{ student[6] }}</td>
+
+                <!-- EMAIL -->
+                <td>{{ student[7] }}</td>
+
+                <!-- PHONE -->
+                <td>{{ student[8] }}</td>
+
+                <!-- ACTION -->
+                <td>
+
+                    <a href="/edit/{{ student[0] }}">
+
+                        <button class="action-btn edit-btn">
+                            Edit
+                        </button>
+
+                    </a>
+
+                    <a href="/delete/{{ student[0] }}"
+                       onclick="return confirm('Delete this student?')">
+
+                        <button class="action-btn delete-btn">
+                            Delete
+                        </button>
+
+                    </a>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        </table>
+
+    </div>
+
+</body>
+</html>

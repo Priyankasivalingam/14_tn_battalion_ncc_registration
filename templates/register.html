@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>
+        14 Tamil Nadu Battalion NCC Camp Registration
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<div class="glow"></div>
+
+<div class="container">
+
+    <h1>
+        14 Tamil Nadu Battalion NCC Camp Registration
+    </h1>
+
+    <form action="/register" method="POST">
+
+        <div class="field">
+
+            <label>Full Name</label>
+
+            <input type="text"
+                   name="full_name"
+                   required>
+
+        </div>
+
+        <div class="field">
+
+            <label>Date of Birth</label>
+
+            <input type="date"
+                   name="date_of_birth"
+                   required>
+
+        </div>
+
+        <div class="field">
+
+            <label>Current NCC Year</label>
+
+            <input type="text"
+                   name="ncc_year"
+                   required>
+
+        </div>
+
+        <div class="field">
+
+            <label>Camp Name</label>
+
+            <input type="text"
+                   name="camp_name"
+                   required>
+
+        </div>
+
+        <div class="field">
+
+            <label>College Name</label>
+
+            <input type="text"
+                   name="college_name"
+                   required>
+
+        </div>
+
+        <div class="field">
+
+            <label>Regiment Number</label>
+
+            <input type="text"
+                   name="regiment_number"
+                   required>
+
+        </div>
+
+        <div class="field">
+
+            <label>Email Address</label>
+
+            <input type="email"
+                   name="email"
+                   required>
+
+        </div>
+
+        <div class="field">
+
+            <label>Phone Number</label>
+
+            <input type="text"
+                   name="phone"
+                   required>
+
+        </div>
+
+        <button type="submit">
+            Register Now
+        </button>
+
+    </form>
+
+</div>
+
+</body>
+</html>
