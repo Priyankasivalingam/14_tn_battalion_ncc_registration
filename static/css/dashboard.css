@@ -325,3 +325,52 @@ RESPONSIVE
         padding:20px;
     }
 }
+/* =========================================
+SEARCH BAR
+========================================= */
+
+.search-box{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    margin-bottom:25px;
+}
+
+.search-box input{
+
+    width:400px;
+
+    max-width:90%;
+
+    padding:14px 20px;
+
+    border-radius:12px;
+
+    border:1px solid rgba(255,255,255,0.1);
+
+    background:rgba(255,255,255,0.05);
+
+    color:white;
+
+    font-size:15px;
+
+    outline:none;
+
+    transition:0.3s;
+}
+
+.search-box input:focus{
+
+    border:1px solid #00e676;
+
+    box-shadow:0 0 15px rgba(0,255,120,0.3);
+}
+
+.search-box input::placeholder{
+
+    color:#999;
+}

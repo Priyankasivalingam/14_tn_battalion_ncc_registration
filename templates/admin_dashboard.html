@@ -10,8 +10,8 @@
     <title>Admin Dashboard</title>
 
     <link
-    rel="stylesheet"
-    href="{{ url_for('static', filename='css/dashboard.css') }}"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='css/dashboard.css') }}"
     >
 
 </head>
@@ -26,71 +26,129 @@
             NCC Registration Admin Dashboard
         </h1>
 
-        <table>
+        <!-- SEARCH BAR -->
 
-            <tr>
+        <div class="search-box">
 
-                <th>ID</th>
-                <th>Full Name</th>
-                <th>DOB</th>
-                <th>NCC Year</th>
-                <th>Camp</th>
-                <th>College</th>
-                <th>Regiment No</th>
-                <th>Email</th>
-                <th>Phone</th>
-                <th>Actions</th>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by Name, Camp, College, Regiment..."
+                onkeyup="searchTable()"
+            >
 
-            </tr>
+        </div>
 
-            {% for row in data %}
+        <table id="cadetTable">
 
-            <tr>
+            <thead>
 
-                <td>{{ row.id }}</td>
+                <tr>
 
-                <td>{{ row.full_name }}</td>
+                    <th>ID</th>
+                    <th>Full Name</th>
+                    <th>DOB</th>
+                    <th>NCC Year</th>
+                    <th>Camp</th>
+                    <th>College</th>
+                    <th>Regiment No</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Actions</th>
 
-                <td>{{ row.date_of_birth }}</td>
+                </tr>
 
-                <td>{{ row.ncc_year }}</td>
+            </thead>
 
-                <td>{{ row.camp_name }}</td>
+            <tbody>
 
-                <td>{{ row.college_name }}</td>
+                {% for row in data %}
 
-                <td>{{ row.regiment_number }}</td>
+                <tr>
 
-                <td>{{ row.email }}</td>
+                    <td>{{ row.id }}</td>
 
-                <td>{{ row.phone }}</td>
+                    <td>{{ row.full_name }}</td>
 
-                <td>
+                    <td>{{ row.date_of_birth }}</td>
 
-                    <a href="/edit/{{ row.id }}">
-                        <button class="action-btn edit-btn">
-                            Edit
-                        </button>
-                    </a>
+                    <td>{{ row.ncc_year }}</td>
 
-                    <a href="/delete/{{ row.id }}">
-                        <button
-                            class="action-btn delete-btn"
-                            onclick="return confirm('Delete this cadet?')"
-                        >
-                            Delete
-                        </button>
-                    </a>
+                    <td>{{ row.camp_name }}</td>
 
-                </td>
+                    <td>{{ row.college_name }}</td>
 
-            </tr>
+                    <td>{{ row.regiment_number }}</td>
 
-            {% endfor %}
+                    <td>{{ row.email }}</td>
+
+                    <td>{{ row.phone }}</td>
+
+                    <td>
+
+                        <a href="/edit/{{ row.id }}">
+
+                            <button class="action-btn edit-btn">
+                                Edit
+                            </button>
+
+                        </a>
+
+                        <a href="/delete/{{ row.id }}">
+
+                            <button
+                                class="action-btn delete-btn"
+                                onclick="return confirm('Delete this cadet?')"
+                            >
+
+                                Delete
+
+                            </button>
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
 
         </table>
 
     </div>
+
+    <!-- SEARCH SCRIPT -->
+
+    <script>
+
+        function searchTable() {
+
+            let input = document.getElementById("searchInput");
+
+            let filter = input.value.toLowerCase();
+
+            let table = document.getElementById("cadetTable");
+
+            let tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) {
+
+                let rowText = tr[i].textContent.toLowerCase();
+
+                if (rowText.includes(filter)) {
+
+                    tr[i].style.display = "";
+
+                } else {
+
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+
+    </script>
 
 </body>
 

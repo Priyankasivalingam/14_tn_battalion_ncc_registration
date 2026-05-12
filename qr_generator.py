@@ -1,9 +1,12 @@
 import qrcode
 
-url = 'http://192.168.1.11:5000/'
+# YOUR WEBSITE LINK
+url = "https://14tnbattalionnccregistration-production.up.railway.app/"
 
-img = qrcode.make(url)
+# CREATE QR
+qr = qrcode.make(url)
 
-img.save('ncc_qr.png')
+# SAVE QR IMAGE
+qr.save("ncc_qr.png")
 
 print("QR Code Generated Successfully")
