@@ -12,7 +12,7 @@
     <link
     rel="stylesheet"
     href="{{ url_for('static', filename='css/dashboard.css') }}"
->
+    >
 
 </head>
 
@@ -68,26 +68,18 @@
                 <td>
 
                     <a href="/edit/{{ row.id }}">
-
                         <button class="action-btn edit-btn">
-
                             Edit
-
                         </button>
-
                     </a>
 
                     <a href="/delete/{{ row.id }}">
-
                         <button
                             class="action-btn delete-btn"
                             onclick="return confirm('Delete this cadet?')"
                         >
-
                             Delete
-
                         </button>
-
                     </a>
 
                 </td>
