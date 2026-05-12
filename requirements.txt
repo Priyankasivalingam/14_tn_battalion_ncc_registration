@@ -1,6 +1,6 @@
 Flask
+gunicorn
 pymysql
 flask-mail
 qrcode
 pillow
-gunicorn
