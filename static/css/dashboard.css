@@ -374,3 +374,90 @@ SEARCH BAR
 
     color:#999;
 }
+/* =========================================
+TOP ACTIONS
+========================================= */
+
+.top-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    margin-bottom:20px;
+}
+
+
+/* =========================================
+PDF BUTTON
+========================================= */
+
+.pdf-btn{
+
+    background:#00e676;
+
+    color:black;
+
+    border:none;
+
+    padding:12px 22px;
+
+    border-radius:12px;
+
+    font-size:15px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+.pdf-btn:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 0 15px rgba(0,255,120,0.4);
+}
+
+
+/* =========================================
+PRINT SETTINGS
+========================================= */
+
+@media print {
+
+    body{
+
+        background:white;
+    }
+
+    .search-box,
+    .top-actions,
+    .action-btn,
+    .glow{
+
+        display:none;
+    }
+
+    .container{
+
+        box-shadow:none;
+
+        border:none;
+
+        background:white;
+    }
+
+    td{
+
+        color:black;
+
+        border:1px solid #ddd;
+    }
+
+    th{
+
+        color:black;
+    }
+}

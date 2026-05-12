@@ -39,6 +39,20 @@
 
         </div>
 
+        <!-- TOP ACTIONS -->
+
+        <div class="top-actions">
+
+            <button onclick="downloadPDF()" class="pdf-btn">
+
+                Download PDF
+
+            </button>
+
+        </div>
+
+        <!-- TABLE -->
+
         <table id="cadetTable">
 
             <thead>
@@ -89,7 +103,9 @@
                         <a href="/edit/{{ row.id }}">
 
                             <button class="action-btn edit-btn">
+
                                 Edit
+
                             </button>
 
                         </a>
@@ -146,6 +162,13 @@
                     tr[i].style.display = "none";
                 }
             }
+        }
+
+        // PDF DOWNLOAD
+
+        function downloadPDF(){
+
+            window.print();
         }
 
     </script>
