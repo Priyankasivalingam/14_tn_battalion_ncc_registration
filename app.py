@@ -5,56 +5,65 @@ import os
 
 app = Flask(__name__)
 
-app.secret_key = 'ncc_secret_key'
+# ==================================================
+# SECRET KEY
+# ==================================================
 
-# =========================================
-# MYSQL CONFIGURATION
-# =========================================
+app.secret_key = os.environ.get('SECRET_KEY', 'ncc_secret_key')
 
-app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST')
-app.config['MYSQL_USER'] = os.getenv('MYSQLUSER')
-app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD')
-app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE')
-app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT'))
 
-# =========================================
+# ==================================================
+# MYSQL CONFIGURATION (RAILWAY READY)
+# ==================================================
+
+MYSQL_HOST = os.environ.get('MYSQLHOST')
+MYSQL_USER = os.environ.get('MYSQLUSER')
+MYSQL_PASSWORD = os.environ.get('MYSQLPASSWORD')
+MYSQL_DB = os.environ.get('MYSQLDATABASE')
+
+# Railway sometimes gives empty MYSQLPORT
+MYSQL_PORT = int(os.environ.get('MYSQLPORT', 3306))
+
+
+# ==================================================
 # EMAIL CONFIGURATION
-# =========================================
+# ==================================================
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 
-# CHANGE YOUR EMAIL HERE
+# CHANGE THESE
 app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
-
-# ADD APP PASSWORD HERE
 app.config['MAIL_PASSWORD'] = 'your_app_password'
 
 mail = Mail(app)
 
-# =========================================
-# DATABASE CONNECTION FUNCTION
-# =========================================
+
+# ==================================================
+# DATABASE CONNECTION
+# ==================================================
 
 def get_connection():
 
     connection = pymysql.connect(
 
-        host=app.config['MYSQL_HOST'],
-        user=app.config['MYSQL_USER'],
-        password=app.config['MYSQL_PASSWORD'],
-        database=app.config['MYSQL_DB'],
-        port=app.config['MYSQL_PORT']
+        host=MYSQL_HOST,
+        user=MYSQL_USER,
+        password=MYSQL_PASSWORD,
+        database=MYSQL_DB,
+        port=MYSQL_PORT,
+
+        cursorclass=pymysql.cursors.DictCursor
 
     )
 
     return connection
 
 
-# =========================================
+# ==================================================
 # HOME PAGE
-# =========================================
+# ==================================================
 
 @app.route('/')
 def home():
@@ -62,9 +71,9 @@ def home():
     return render_template('register.html')
 
 
-# =========================================
+# ==================================================
 # SUCCESS PAGE
-# =========================================
+# ==================================================
 
 @app.route('/success')
 def success():
@@ -72,173 +81,179 @@ def success():
     return render_template('success.html')
 
 
-# =========================================
+# ==================================================
 # REGISTER STUDENT
-# =========================================
+# ==================================================
 
 @app.route('/register', methods=['POST'])
 def register():
 
-    full_name = request.form['full_name']
-    date_of_birth = request.form['date_of_birth']
-    ncc_year = request.form['ncc_year']
-    camp_name = request.form['camp_name']
-    college_name = request.form['college_name']
-    regiment_number = request.form['regiment_number']
-    email = request.form['email']
-    phone = request.form['phone']
+    try:
 
-    connection = get_connection()
+        full_name = request.form['full_name']
+        date_of_birth = request.form['date_of_birth']
+        ncc_year = request.form['ncc_year']
+        camp_name = request.form['camp_name']
+        college_name = request.form['college_name']
+        regiment_number = request.form['regiment_number']
+        email = request.form['email']
+        phone = request.form['phone']
 
-    cur = connection.cursor()
+        connection = get_connection()
 
-    # =========================================
-    # CHECK DUPLICATES
-    # =========================================
+        cur = connection.cursor()
 
-    cur.execute("""
+        # =========================================
+        # CHECK DUPLICATES
+        # =========================================
 
-    SELECT * FROM cadets
+        cur.execute("""
 
-    WHERE
+        SELECT * FROM cadets
 
-    email=%s
-    OR
-    phone=%s
-    OR
-    regiment_number=%s
+        WHERE
+        email=%s
+        OR phone=%s
+        OR regiment_number=%s
 
-    """, (
+        """, (
 
-        email,
-        phone,
-        regiment_number
+            email,
+            phone,
+            regiment_number
 
-    ))
+        ))
 
-    existing_user = cur.fetchone()
+        existing_user = cur.fetchone()
 
-    # =========================================
-    # DUPLICATE FOUND
-    # =========================================
+        # =========================================
+        # DUPLICATE FOUND
+        # =========================================
 
-    if existing_user:
+        if existing_user:
+
+            cur.close()
+            connection.close()
+
+            return """
+
+            <html>
+
+            <head>
+
+                <title>Duplicate Entry</title>
+
+                <style>
+
+                    body{
+                        background:#000;
+                        color:white;
+                        display:flex;
+                        justify-content:center;
+                        align-items:center;
+                        height:100vh;
+                        font-family:Arial;
+                        flex-direction:column;
+                    }
+
+                    h2{
+                        color:red;
+                        margin-bottom:20px;
+                    }
+
+                    button{
+                        padding:12px 25px;
+                        border:none;
+                        background:#00ff88;
+                        color:black;
+                        border-radius:10px;
+                        font-size:16px;
+                        cursor:pointer;
+                        font-weight:bold;
+                    }
+
+                    a{
+                        text-decoration:none;
+                    }
+
+                </style>
+
+            </head>
+
+            <body>
+
+                <h2>Cadet Already Registered</h2>
+
+                <a href="/">
+
+                    <button>Go Back</button>
+
+                </a>
+
+            </body>
+
+            </html>
+
+            """
+
+        # =========================================
+        # INSERT STUDENT
+        # =========================================
+
+        cur.execute("""
+
+        INSERT INTO cadets
+        (
+            full_name,
+            date_of_birth,
+            ncc_year,
+            camp_name,
+            college_name,
+            regiment_number,
+            email,
+            phone
+        )
+
+        VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
+
+        """, (
+
+            full_name,
+            date_of_birth,
+            ncc_year,
+            camp_name,
+            college_name,
+            regiment_number,
+            email,
+            phone
+
+        ))
+
+        connection.commit()
 
         cur.close()
         connection.close()
 
-        return """
+        return render_template('success.html')
 
-        <html>
+    except Exception as e:
 
-        <head>
+        return f"""
 
-            <title>Duplicate Entry</title>
+        <h1 style='color:red;text-align:center;margin-top:50px;'>
 
-            <style>
+        ERROR:<br><br>
 
-                body{
+        {str(e)}
 
-                    background:#000;
-                    color:white;
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                    height:100vh;
-                    font-family:Arial;
-                    flex-direction:column;
-                }
-
-                h2{
-
-                    color:red;
-                    margin-bottom:20px;
-                }
-
-                button{
-
-                    padding:12px 25px;
-                    border:none;
-                    background:#00ff88;
-                    color:black;
-                    border-radius:10px;
-                    font-size:16px;
-                    cursor:pointer;
-                    font-weight:bold;
-                }
-
-                a{
-                    text-decoration:none;
-                }
-
-            </style>
-
-        </head>
-
-        <body>
-
-            <h2>
-                Cadet Already Registered
-            </h2>
-
-            <a href="/">
-
-                <button>
-                    Go Back
-                </button>
-
-            </a>
-
-        </body>
-
-        </html>
+        </h1>
 
         """
 
-    # =========================================
-    # INSERT STUDENT
-    # =========================================
 
-    cur.execute("""
-
-    INSERT INTO cadets
-    (
-        full_name,
-        date_of_birth,
-        ncc_year,
-        camp_name,
-        college_name,
-        regiment_number,
-        email,
-        phone
-    )
-
-    VALUES (%s,%s,%s,%s,%s,%s,%s,%s)
-
-    """, (
-
-        full_name,
-        date_of_birth,
-        ncc_year,
-        camp_name,
-        college_name,
-        regiment_number,
-        email,
-        phone
-
-    ))
-
-    connection.commit()
-
-    cur.close()
-    connection.close()
-
-    return render_template('success.html')
-
-
-# =========================================
+# ==================================================
 # ADMIN LOGIN PAGE
-# =========================================
+# ==================================================
 
 @app.route('/admin_login')
 def admin_login():
@@ -246,9 +261,9 @@ def admin_login():
     return render_template('admin_login.html')
 
 
-# =========================================
+# ==================================================
 # ADMIN LOGIN
-# =========================================
+# ==================================================
 
 @app.route('/admin_login', methods=['POST'])
 def admin_login_post():
@@ -279,12 +294,20 @@ def admin_login_post():
 
         return redirect('/dashboard')
 
-    return "Invalid Login"
+    return """
+
+    <h2 style='color:red;text-align:center;margin-top:50px;'>
+
+    Invalid Login
+
+    </h2>
+
+    """
 
 
-# =========================================
+# ==================================================
 # ADMIN DASHBOARD
-# =========================================
+# ==================================================
 
 @app.route('/dashboard')
 def dashboard():
@@ -317,9 +340,9 @@ def dashboard():
     )
 
 
-# =========================================
+# ==================================================
 # DELETE STUDENT
-# =========================================
+# ==================================================
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -348,9 +371,9 @@ def delete(id):
     return redirect('/dashboard')
 
 
-# =========================================
+# ==================================================
 # EDIT STUDENT PAGE
-# =========================================
+# ==================================================
 
 @app.route('/edit/<int:id>')
 def edit(id):
@@ -385,9 +408,9 @@ def edit(id):
     )
 
 
-# =========================================
+# ==================================================
 # UPDATE STUDENT
-# =========================================
+# ==================================================
 
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
@@ -446,9 +469,9 @@ def update(id):
     return redirect('/dashboard')
 
 
-# =========================================
-# ADMIN LOGOUT
-# =========================================
+# ==================================================
+# LOGOUT
+# ==================================================
 
 @app.route('/logout')
 def logout():
@@ -458,9 +481,19 @@ def logout():
     return redirect('/admin_login')
 
 
-# =========================================
-# RUN FLASK SERVER
-# =========================================
+# ==================================================
+# HEALTH CHECK
+# ==================================================
+
+@app.route('/health')
+def health():
+
+    return "APP RUNNING"
+
+
+# ==================================================
+# RUN FLASK APP
+# ==================================================
 
 if __name__ == '__main__':
 
