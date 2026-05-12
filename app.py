@@ -21,7 +21,7 @@ MYSQL_USER = os.environ.get('MYSQLUSER')
 MYSQL_PASSWORD = os.environ.get('MYSQLPASSWORD')
 MYSQL_DB = os.environ.get('MYSQLDATABASE')
 
-# Railway sometimes gives empty MYSQLPORT
+# Railway fallback port
 MYSQL_PORT = int(os.environ.get('MYSQLPORT', 3306))
 
 
@@ -68,7 +68,22 @@ def get_connection():
 @app.route('/')
 def home():
 
-    return render_template('register.html')
+    try:
+        return render_template('register.html')
+
+    except Exception as e:
+
+        return f"""
+
+        <h1 style='color:red;text-align:center;margin-top:50px;'>
+
+        TEMPLATE ERROR:<br><br>
+
+        {str(e)}
+
+        </h1>
+
+        """
 
 
 # ==================================================
@@ -268,41 +283,57 @@ def admin_login():
 @app.route('/admin_login', methods=['POST'])
 def admin_login_post():
 
-    username = request.form['username']
-    password = request.form['password']
+    try:
 
-    connection = get_connection()
+        username = request.form['username']
+        password = request.form['password']
 
-    cur = connection.cursor()
+        connection = get_connection()
 
-    cur.execute(
+        cur = connection.cursor()
 
-        "SELECT * FROM admin WHERE username=%s AND password=%s",
+        cur.execute(
 
-        (username, password)
+            "SELECT * FROM admin WHERE username=%s AND password=%s",
 
-    )
+            (username, password)
 
-    admin = cur.fetchone()
+        )
 
-    cur.close()
-    connection.close()
+        admin = cur.fetchone()
 
-    if admin:
+        cur.close()
+        connection.close()
 
-        session['admin'] = username
+        if admin:
 
-        return redirect('/dashboard')
+            session['admin'] = username
 
-    return """
+            return redirect('/dashboard')
 
-    <h2 style='color:red;text-align:center;margin-top:50px;'>
+        return """
 
-    Invalid Login
+        <h2 style='color:red;text-align:center;margin-top:50px;'>
 
-    </h2>
+        Invalid Login
 
-    """
+        </h2>
+
+        """
+
+    except Exception as e:
+
+        return f"""
+
+        <h1 style='color:red;text-align:center;margin-top:50px;'>
+
+        LOGIN ERROR:<br><br>
+
+        {str(e)}
+
+        </h1>
+
+        """
 
 
 # ==================================================
@@ -312,32 +343,48 @@ def admin_login_post():
 @app.route('/dashboard')
 def dashboard():
 
-    if 'admin' not in session:
+    try:
 
-        return redirect('/admin_login')
+        if 'admin' not in session:
 
-    connection = get_connection()
+            return redirect('/admin_login')
 
-    cur = connection.cursor()
+        connection = get_connection()
 
-    cur.execute(
+        cur = connection.cursor()
 
-        "SELECT * FROM cadets ORDER BY id DESC"
+        cur.execute(
 
-    )
+            "SELECT * FROM cadets ORDER BY id DESC"
 
-    data = cur.fetchall()
+        )
 
-    cur.close()
-    connection.close()
+        data = cur.fetchall()
 
-    return render_template(
+        cur.close()
+        connection.close()
 
-        'admin_dashboard.html',
+        return render_template(
 
-        data=data
+            'admin_dashboard.html',
 
-    )
+            data=data
+
+        )
+
+    except Exception as e:
+
+        return f"""
+
+        <h1 style='color:red;text-align:center;margin-top:50px;'>
+
+        DASHBOARD ERROR:<br><br>
+
+        {str(e)}
+
+        </h1>
+
+        """
 
 
 # ==================================================
@@ -347,28 +394,44 @@ def dashboard():
 @app.route('/delete/<int:id>')
 def delete(id):
 
-    if 'admin' not in session:
+    try:
 
-        return redirect('/admin_login')
+        if 'admin' not in session:
 
-    connection = get_connection()
+            return redirect('/admin_login')
 
-    cur = connection.cursor()
+        connection = get_connection()
 
-    cur.execute(
+        cur = connection.cursor()
 
-        "DELETE FROM cadets WHERE id=%s",
+        cur.execute(
 
-        (id,)
+            "DELETE FROM cadets WHERE id=%s",
 
-    )
+            (id,)
 
-    connection.commit()
+        )
 
-    cur.close()
-    connection.close()
+        connection.commit()
 
-    return redirect('/dashboard')
+        cur.close()
+        connection.close()
+
+        return redirect('/dashboard')
+
+    except Exception as e:
+
+        return f"""
+
+        <h1 style='color:red;text-align:center;margin-top:50px;'>
+
+        DELETE ERROR:<br><br>
+
+        {str(e)}
+
+        </h1>
+
+        """
 
 
 # ==================================================
@@ -378,34 +441,50 @@ def delete(id):
 @app.route('/edit/<int:id>')
 def edit(id):
 
-    if 'admin' not in session:
+    try:
 
-        return redirect('/admin_login')
+        if 'admin' not in session:
 
-    connection = get_connection()
+            return redirect('/admin_login')
 
-    cur = connection.cursor()
+        connection = get_connection()
 
-    cur.execute(
+        cur = connection.cursor()
 
-        "SELECT * FROM cadets WHERE id=%s",
+        cur.execute(
 
-        (id,)
+            "SELECT * FROM cadets WHERE id=%s",
 
-    )
+            (id,)
 
-    student = cur.fetchone()
+        )
 
-    cur.close()
-    connection.close()
+        student = cur.fetchone()
 
-    return render_template(
+        cur.close()
+        connection.close()
 
-        'edit_student.html',
+        return render_template(
 
-        student=student
+            'edit_student.html',
 
-    )
+            student=student
+
+        )
+
+    except Exception as e:
+
+        return f"""
+
+        <h1 style='color:red;text-align:center;margin-top:50px;'>
+
+        EDIT ERROR:<br><br>
+
+        {str(e)}
+
+        </h1>
+
+        """
 
 
 # ==================================================
@@ -415,58 +494,74 @@ def edit(id):
 @app.route('/update/<int:id>', methods=['POST'])
 def update(id):
 
-    if 'admin' not in session:
+    try:
 
-        return redirect('/admin_login')
+        if 'admin' not in session:
 
-    full_name = request.form['full_name']
-    date_of_birth = request.form['date_of_birth']
-    ncc_year = request.form['ncc_year']
-    camp_name = request.form['camp_name']
-    college_name = request.form['college_name']
-    regiment_number = request.form['regiment_number']
-    email = request.form['email']
-    phone = request.form['phone']
+            return redirect('/admin_login')
 
-    connection = get_connection()
+        full_name = request.form['full_name']
+        date_of_birth = request.form['date_of_birth']
+        ncc_year = request.form['ncc_year']
+        camp_name = request.form['camp_name']
+        college_name = request.form['college_name']
+        regiment_number = request.form['regiment_number']
+        email = request.form['email']
+        phone = request.form['phone']
 
-    cur = connection.cursor()
+        connection = get_connection()
 
-    cur.execute("""
+        cur = connection.cursor()
 
-    UPDATE cadets SET
+        cur.execute("""
 
-    full_name=%s,
-    date_of_birth=%s,
-    ncc_year=%s,
-    camp_name=%s,
-    college_name=%s,
-    regiment_number=%s,
-    email=%s,
-    phone=%s
+        UPDATE cadets SET
 
-    WHERE id=%s
+        full_name=%s,
+        date_of_birth=%s,
+        ncc_year=%s,
+        camp_name=%s,
+        college_name=%s,
+        regiment_number=%s,
+        email=%s,
+        phone=%s
 
-    """, (
+        WHERE id=%s
 
-        full_name,
-        date_of_birth,
-        ncc_year,
-        camp_name,
-        college_name,
-        regiment_number,
-        email,
-        phone,
-        id
+        """, (
 
-    ))
+            full_name,
+            date_of_birth,
+            ncc_year,
+            camp_name,
+            college_name,
+            regiment_number,
+            email,
+            phone,
+            id
 
-    connection.commit()
+        ))
 
-    cur.close()
-    connection.close()
+        connection.commit()
 
-    return redirect('/dashboard')
+        cur.close()
+        connection.close()
+
+        return redirect('/dashboard')
+
+    except Exception as e:
+
+        return f"""
+
+        <h1 style='color:red;text-align:center;margin-top:50px;'>
+
+        UPDATE ERROR:<br><br>
+
+        {str(e)}
+
+        </h1>
+
+        """
 
 
 # ==================================================
