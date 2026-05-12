@@ -1,5 +1,6 @@
 Flask
-flask-mysqldb
+pymysql
 flask-mail
 qrcode
 pillow
+gunicorn

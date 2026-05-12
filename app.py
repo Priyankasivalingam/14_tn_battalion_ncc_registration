@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, redirect, session
-from flask_mysqldb import MySQL
-from flask_mail import Mail, Message
+from flask_mail import Mail
+import pymysql
 import os
 
 app = Flask(__name__)
@@ -17,8 +17,6 @@ app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD')
 app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE')
 app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT'))
 
-mysql = MySQL(app)
-
 # =========================================
 # EMAIL CONFIGURATION
 # =========================================
@@ -34,6 +32,25 @@ app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
 app.config['MAIL_PASSWORD'] = 'your_app_password'
 
 mail = Mail(app)
+
+# =========================================
+# DATABASE CONNECTION FUNCTION
+# =========================================
+
+def get_connection():
+
+    connection = pymysql.connect(
+
+        host=app.config['MYSQL_HOST'],
+        user=app.config['MYSQL_USER'],
+        password=app.config['MYSQL_PASSWORD'],
+        database=app.config['MYSQL_DB'],
+        port=app.config['MYSQL_PORT']
+
+    )
+
+    return connection
+
 
 # =========================================
 # HOME PAGE
@@ -71,7 +88,9 @@ def register():
     email = request.form['email']
     phone = request.form['phone']
 
-    cur = mysql.connection.cursor()
+    connection = get_connection()
+
+    cur = connection.cursor()
 
     # =========================================
     # CHECK DUPLICATES
@@ -106,6 +125,7 @@ def register():
     if existing_user:
 
         cur.close()
+        connection.close()
 
         return """
 
@@ -208,9 +228,10 @@ def register():
 
     ))
 
-    mysql.connection.commit()
+    connection.commit()
 
     cur.close()
+    connection.close()
 
     return render_template('success.html')
 
@@ -235,7 +256,9 @@ def admin_login_post():
     username = request.form['username']
     password = request.form['password']
 
-    cur = mysql.connection.cursor()
+    connection = get_connection()
+
+    cur = connection.cursor()
 
     cur.execute(
 
@@ -248,6 +271,7 @@ def admin_login_post():
     admin = cur.fetchone()
 
     cur.close()
+    connection.close()
 
     if admin:
 
@@ -269,7 +293,9 @@ def dashboard():
 
         return redirect('/admin_login')
 
-    cur = mysql.connection.cursor()
+    connection = get_connection()
+
+    cur = connection.cursor()
 
     cur.execute(
 
@@ -280,6 +306,7 @@ def dashboard():
     data = cur.fetchall()
 
     cur.close()
+    connection.close()
 
     return render_template(
 
@@ -301,7 +328,9 @@ def delete(id):
 
         return redirect('/admin_login')
 
-    cur = mysql.connection.cursor()
+    connection = get_connection()
+
+    cur = connection.cursor()
 
     cur.execute(
 
@@ -311,9 +340,10 @@ def delete(id):
 
     )
 
-    mysql.connection.commit()
+    connection.commit()
 
     cur.close()
+    connection.close()
 
     return redirect('/dashboard')
 
@@ -329,7 +359,9 @@ def edit(id):
 
         return redirect('/admin_login')
 
-    cur = mysql.connection.cursor()
+    connection = get_connection()
+
+    cur = connection.cursor()
 
     cur.execute(
 
@@ -342,6 +374,7 @@ def edit(id):
     student = cur.fetchone()
 
     cur.close()
+    connection.close()
 
     return render_template(
 
@@ -372,7 +405,9 @@ def update(id):
     email = request.form['email']
     phone = request.form['phone']
 
-    cur = mysql.connection.cursor()
+    connection = get_connection()
+
+    cur = connection.cursor()
 
     cur.execute("""
 
@@ -403,9 +438,10 @@ def update(id):
 
     ))
 
-    mysql.connection.commit()
+    connection.commit()
 
     cur.close()
+    connection.close()
 
     return redirect('/dashboard')
 
