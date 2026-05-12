@@ -22,7 +22,10 @@ body{
     position:relative;
 }
 
-/* Background Animation */
+
+/* =========================================
+BACKGROUND ANIMATION
+========================================= */
 
 body::before{
 
@@ -63,7 +66,10 @@ body::before{
     }
 }
 
-/* Glow */
+
+/* =========================================
+GREEN GLOW
+========================================= */
 
 .glow{
 
@@ -84,7 +90,10 @@ body::before{
     z-index:-1;
 }
 
-/* Container */
+
+/* =========================================
+CONTAINER
+========================================= */
 
 .container{
 
@@ -96,7 +105,7 @@ body::before{
 
     border-radius:20px;
 
-    background:rgba(15,15,15,0.75);
+    background:rgba(15,15,15,0.80);
 
     border:1px solid rgba(255,255,255,0.06);
 
@@ -106,7 +115,10 @@ body::before{
     0 0 30px rgba(0,255,100,0.1);
 }
 
-/* Heading */
+
+/* =========================================
+HEADING
+========================================= */
 
 h1{
 
@@ -121,9 +133,14 @@ h1{
     font-weight:700;
 
     letter-spacing:1px;
+
+    line-height:1.5;
 }
 
-/* Table */
+
+/* =========================================
+TABLE
+========================================= */
 
 table{
 
@@ -132,7 +149,14 @@ table{
     border-collapse:collapse;
 
     margin-top:20px;
+
+    overflow:hidden;
+
+    border-radius:12px;
 }
+
+
+/* TABLE HEADER */
 
 th{
 
@@ -152,7 +176,12 @@ th{
     text-transform:uppercase;
 
     letter-spacing:1px;
+
+    font-weight:700;
 }
+
+
+/* TABLE DATA */
 
 td{
 
@@ -162,22 +191,37 @@ td{
 
     border-bottom:1px solid rgba(255,255,255,0.08);
 
-    background:rgba(255,255,255,0.02);
+    background:rgba(255,255,255,0.03);
 
     font-size:14px;
+
+    color:#ffffff;
+
+    font-weight:500;
 }
+
+
+/* ROWS */
 
 tr{
 
-    transition:0.3s;
+    transition:0.3s ease;
 }
+
+
+/* HOVER EFFECT */
 
 tr:hover td{
 
-    background:rgba(0,255,100,0.08);
+    background:rgba(0,255,100,0.10);
+
+    color:#8cffc1;
 }
 
-/* Buttons */
+
+/* =========================================
+BUTTONS
+========================================= */
 
 .action-btn{
 
@@ -194,7 +238,12 @@ tr:hover td{
     transition:0.3s;
 
     margin:2px;
+
+    font-size:14px;
 }
+
+
+/* EDIT BUTTON */
 
 .edit-btn{
 
@@ -211,6 +260,9 @@ tr:hover td{
     0 0 15px rgba(0,255,120,0.4);
 }
 
+
+/* DELETE BUTTON */
+
 .delete-btn{
 
     background:#ff1744;
@@ -226,7 +278,33 @@ tr:hover td{
     0 0 15px rgba(255,0,60,0.4);
 }
 
-/* Responsive */
+
+/* =========================================
+SCROLLBAR
+========================================= */
+
+::-webkit-scrollbar{
+
+    height:8px;
+    width:8px;
+}
+
+::-webkit-scrollbar-track{
+
+    background:#111;
+}
+
+::-webkit-scrollbar-thumb{
+
+    background:#00e676;
+
+    border-radius:10px;
+}
+
+
+/* =========================================
+RESPONSIVE
+========================================= */
 
 @media(max-width:1200px){
 
@@ -237,5 +315,13 @@ tr:hover td{
     th,
     td{
         padding:10px;
+    }
+
+    h1{
+        font-size:24px;
+    }
+
+    .container{
+        padding:20px;
     }
 }
