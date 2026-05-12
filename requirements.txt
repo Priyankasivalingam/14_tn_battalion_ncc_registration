@@ -4,3 +4,4 @@ pymysql
 flask-mail
 qrcode
 pillow
+cryptography
