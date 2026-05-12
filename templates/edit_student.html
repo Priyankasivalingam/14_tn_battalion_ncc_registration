@@ -2,51 +2,342 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Edit Student</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+
+            min-height:100vh;
+
+            display:flex;
+
+            justify-content:center;
+
+            align-items:center;
+
+            background:#050505;
+
+            overflow:auto;
+
+            padding:40px;
+
+            position:relative;
+        }
+
+        body::before{
+
+            content:"";
+
+            position:fixed;
+
+            inset:0;
+
+            background:
+            linear-gradient(
+                45deg,
+                #071107,
+                #000,
+                #102010,
+                #000
+            );
+
+            background-size:400% 400%;
+
+            animation:bgMove 12s ease infinite;
+
+            z-index:-2;
+        }
+
+        @keyframes bgMove{
+
+            0%{
+                background-position:0% 50%;
+            }
+
+            50%{
+                background-position:100% 50%;
+            }
+
+            100%{
+                background-position:0% 50%;
+            }
+        }
+
+        .glow{
+
+            position:fixed;
+
+            width:500px;
+            height:500px;
+
+            background:rgba(0,255,100,0.08);
+
+            border-radius:50%;
+
+            filter:blur(100px);
+
+            top:-100px;
+            right:-100px;
+
+            z-index:-1;
+        }
+
+        .container{
+
+            width:100%;
+            max-width:650px;
+
+            background:rgba(10,10,10,0.92);
+
+            border-radius:28px;
+
+            padding:45px;
+
+            border:1px solid rgba(255,255,255,0.06);
+
+            box-shadow:
+            0 0 40px rgba(0,255,100,0.10);
+
+            backdrop-filter:blur(10px);
+        }
+
+        h1{
+
+            text-align:center;
+
+            color:white;
+
+            margin-bottom:35px;
+
+            font-size:42px;
+
+            font-weight:700;
+        }
+
+        form{
+
+            display:flex;
+
+            flex-direction:column;
+
+            gap:18px;
+        }
+
+        input{
+
+            width:100%;
+
+            padding:18px;
+
+            border:none;
+
+            outline:none;
+
+            border-radius:16px;
+
+            background:#0f0f14;
+
+            color:white;
+
+            font-size:16px;
+
+            border:1px solid rgba(255,255,255,0.08);
+
+            transition:0.3s;
+        }
+
+        input:focus{
+
+            border:1px solid #00ff88;
+
+            box-shadow:
+            0 0 15px rgba(0,255,120,0.2);
+        }
+
+        input::placeholder{
+
+            color:#999;
+        }
+
+        .btn{
+
+            margin-top:10px;
+
+            padding:18px;
+
+            border:none;
+
+            border-radius:16px;
+
+            background:
+            linear-gradient(
+                90deg,
+                #00d84a,
+                #5cff00
+            );
+
+            color:black;
+
+            font-size:20px;
+
+            font-weight:700;
+
+            cursor:pointer;
+
+            transition:0.3s;
+        }
+
+        .btn:hover{
+
+            transform:translateY(-2px);
+
+            box-shadow:
+            0 0 25px rgba(0,255,100,0.35);
+        }
+
+        .back-btn{
+
+            margin-top:18px;
+
+            display:block;
+
+            text-align:center;
+
+            color:#8cffc1;
+
+            text-decoration:none;
+
+            font-weight:500;
+        }
+
+        .back-btn:hover{
+
+            color:white;
+        }
+
+        @media(max-width:700px){
+
+            .container{
+                padding:30px 20px;
+            }
+
+            h1{
+                font-size:32px;
+            }
+
+            input{
+                padding:15px;
+            }
+        }
+
+    </style>
+
 </head>
 
 <body>
 
-<div class="container">
+    <div class="glow"></div>
 
-    <h1>Edit Student</h1>
+    <div class="container">
 
-    <form method="POST">
+        <h1>Edit Student</h1>
 
-        <input type="text"
-               name="name"
-               value="{{ student[1] }}"
-               required>
+        <form method="POST" action="/update/{{ student.id }}">
 
-        <input type="text"
-               name="department"
-               value="{{ student[2] }}"
-               required>
+            <input
+                type="text"
+                name="full_name"
+                value="{{ student.full_name }}"
+                placeholder="Full Name"
+                required
+            >
 
-        <input type="text"
-               name="year"
-               value="{{ student[3] }}"
-               required>
+            <input
+                type="date"
+                name="date_of_birth"
+                value="{{ student.date_of_birth }}"
+                required
+            >
 
-        <input type="text"
-               name="phone"
-               value="{{ student[4] }}"
-               required>
+            <input
+                type="text"
+                name="ncc_year"
+                value="{{ student.ncc_year }}"
+                placeholder="NCC Year"
+                required
+            >
 
-        <button type="submit">
-            Update Student
-        </button>
+            <input
+                type="text"
+                name="camp_name"
+                value="{{ student.camp_name }}"
+                placeholder="Camp Name"
+                required
+            >
 
-    </form>
+            <input
+                type="text"
+                name="college_name"
+                value="{{ student.college_name }}"
+                placeholder="College Name"
+                required
+            >
 
-</div>
+            <input
+                type="text"
+                name="regiment_number"
+                value="{{ student.regiment_number }}"
+                placeholder="Regiment Number"
+                required
+            >
+
+            <input
+                type="email"
+                name="email"
+                value="{{ student.email }}"
+                placeholder="Email"
+                required
+            >
+
+            <input
+                type="text"
+                name="phone"
+                value="{{ student.phone }}"
+                placeholder="Phone Number"
+                required
+            >
+
+            <button class="btn" type="submit">
+
+                Update Student
+
+            </button>
+
+        </form>
+
+        <a href="/dashboard" class="back-btn">
+
+            ← Back to Dashboard
+
+        </a>
+
+    </div>
 
 </body>
+
 </html>
