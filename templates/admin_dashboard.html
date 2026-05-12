@@ -5,25 +5,25 @@
 
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Admin Dashboard</title>
 
-   <link rel="stylesheet"
-      href="{{ url_for('static', filename='css/dashboard.css') }}">
+    <link
+        rel="stylesheet"
+        href="{{ url_for('static', filename='dashboard.css') }}"
+    >
+
 </head>
 
 <body>
 
-    <!-- Background Glow -->
     <div class="glow"></div>
 
     <div class="container">
 
         <h1>
-            14 TN Battalion NCC <br>
-            Admin Dashboard
+            NCC Registration Admin Dashboard
         </h1>
 
         <table>
@@ -31,74 +31,61 @@
             <tr>
 
                 <th>ID</th>
-
-                <th>FULL NAME</th>
-
+                <th>Full Name</th>
                 <th>DOB</th>
-
-                <th>NCC YEAR</th>
-
-                <th>CAMP NAME</th>
-
-                <th>COLLEGE</th>
-
-                <th>REGIMENT NO</th>
-
-                <th>EMAIL</th>
-
-                <th>PHONE</th>
-
-                <th>ACTION</th>
+                <th>NCC Year</th>
+                <th>Camp</th>
+                <th>College</th>
+                <th>Regiment No</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
 
             </tr>
 
-            {% for student in data %}
+            {% for row in data %}
 
             <tr>
 
-                <!-- ID -->
-                <td>{{ student[0] }}</td>
+                <td>{{ row.id }}</td>
 
-                <!-- FULL NAME -->
-                <td>{{ student[1] }}</td>
+                <td>{{ row.full_name }}</td>
 
-                <!-- DATE OF BIRTH -->
-                <td>{{ student[2] }}</td>
+                <td>{{ row.date_of_birth }}</td>
 
-                <!-- NCC YEAR -->
-                <td>{{ student[3] }}</td>
+                <td>{{ row.ncc_year }}</td>
 
-                <!-- CAMP NAME -->
-                <td>{{ student[4] }}</td>
+                <td>{{ row.camp_name }}</td>
 
-                <!-- COLLEGE -->
-                <td>{{ student[5] }}</td>
+                <td>{{ row.college_name }}</td>
 
-                <!-- REGIMENT NUMBER -->
-                <td>{{ student[6] }}</td>
+                <td>{{ row.regiment_number }}</td>
 
-                <!-- EMAIL -->
-                <td>{{ student[7] }}</td>
+                <td>{{ row.email }}</td>
 
-                <!-- PHONE -->
-                <td>{{ student[8] }}</td>
+                <td>{{ row.phone }}</td>
 
-                <!-- ACTION -->
                 <td>
 
-                    <a href="/edit/{{ student[0] }}">
+                    <a href="/edit/{{ row.id }}">
 
                         <button class="action-btn edit-btn">
+
                             Edit
+
                         </button>
 
                     </a>
 
-                    <a href="/delete/{{ student[0] }}"
-                       onclick="return confirm('Delete this student?')">
+                    <a href="/delete/{{ row.id }}">
 
-                        <button class="action-btn delete-btn">
+                        <button
+                            class="action-btn delete-btn"
+                            onclick="return confirm('Delete this cadet?')"
+                        >
+
                             Delete
+
                         </button>
 
                     </a>
@@ -114,4 +101,5 @@
     </div>
 
 </body>
+
 </html>
