@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, session
 from flask_mysqldb import MySQL
 from flask_mail import Mail, Message
+import os
 
 app = Flask(__name__)
 
@@ -10,10 +11,11 @@ app.secret_key = 'ncc_secret_key'
 # MYSQL CONFIGURATION
 # =========================================
 
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = ''
-app.config['MYSQL_DB'] = 'ncc_registration'
+app.config['MYSQL_HOST'] = os.getenv('MYSQLHOST')
+app.config['MYSQL_USER'] = os.getenv('MYSQLUSER')
+app.config['MYSQL_PASSWORD'] = os.getenv('MYSQLPASSWORD')
+app.config['MYSQL_DB'] = os.getenv('MYSQLDATABASE')
+app.config['MYSQL_PORT'] = int(os.getenv('MYSQLPORT'))
 
 mysql = MySQL(app)
 
